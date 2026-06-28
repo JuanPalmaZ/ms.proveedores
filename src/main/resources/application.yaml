@@ -68,3 +68,12 @@ jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   # Tiempo de vida del token en milisegundos (86400000 ms = 1 día)
   expiration: 86400000
+# ===================================
+# Swagger / Springdoc
+# ===================================
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/swagger-ui.html
