@@ -23,7 +23,7 @@ import cl.paris.marketplace.ms_proveedores.dto.ProveedorRequest;
 import cl.paris.marketplace.ms_proveedores.dto.ProveedorResponse;
 import cl.paris.marketplace.ms_proveedores.service.ProveedorService;
 import jakarta.validation.Valid;
-
+import cl.paris.marketplace.ms_proveedores.EstadoDocumento;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
