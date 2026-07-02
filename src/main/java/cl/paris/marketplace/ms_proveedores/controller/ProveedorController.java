@@ -120,4 +120,18 @@ public class ProveedorController {
         ProveedorCompletoResponse response = proveedorService.obtenerProveedorCompleto(id);
         return ResponseEntity.ok(response);
     }
+    @Operation(summary = "Actualiza el estado de un documento")
+@ApiResponse(responseCode = "200", description = "Estado del documento actualizado correctamente")
+@PreAuthorize("hasRole('ADMIN')")
+@PutMapping("/documentos/{documentoId}/estado")
+public ResponseEntity<DocumentoResponse> actualizarEstadoDocumento(
+        @PathVariable UUID documentoId,
+        @Valid @RequestBody ActualizarEstadoDocumentoRequest request) {
+
+    DocumentoResponse response = proveedorService.actualizarEstadoDocumento(
+            documentoId,
+            request.estado());
+
+    return ResponseEntity.ok(response);
+}
 }
