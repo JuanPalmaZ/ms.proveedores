@@ -1,4 +1,4 @@
-package cl.paris.marketplace.ms.administracion.dto;
+package cl.paris.marketplace.ms_proveedores.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
