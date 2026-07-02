@@ -3,7 +3,6 @@ package cl.paris.marketplace.ms_proveedores.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import cl.paris.marketplace.ms_proveedores.model.enums.EstadoDocumento;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
