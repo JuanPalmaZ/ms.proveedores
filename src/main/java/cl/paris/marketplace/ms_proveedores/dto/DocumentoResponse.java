@@ -1,10 +1,8 @@
 package cl.paris.marketplace.ms_proveedores.dto;
-import cl.paris.marketplace.ms_proveedores.dto.ActualizarEstadoDocumentoRequest;
-import cl.paris.marketplace.ms_proveedores.model.EstadoDocumento;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import cl.paris.marketplace.ms_proveedores.model.enums.EstadoDocumento;
+import cl.paris.marketplace.ms_proveedores.model.EstadoDocumento;
 
 public record DocumentoResponse(
         UUID id,
