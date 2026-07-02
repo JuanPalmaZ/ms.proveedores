@@ -44,7 +44,7 @@ public class ProveedorController {
     // ENDPOINTS: PROVEEDORES
     // ==========================================
 
-    @Operation(summary = "Crea un nuevo proveedor asociado al usuario autenticado")
+    @Operation(summary = "Crea un nuevo proveedor asociado al usuario autenticado", description = "Registra los datos iniciales de un proveedor en el sistema vinculándolo de manera automática al usuario que realiza la petición.")
     @ApiResponse(responseCode = "201", description = "Proveedor creado exitosamente")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
         description = "Payload con los datos del proveedor",
@@ -66,7 +66,7 @@ public class ProveedorController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Lista los proveedores asociados a un ID de usuario específico")
+    @Operation(summary = "Lista los proveedores asociados a un ID de usuario específico", description = "Devuelve una lista con todos los perfiles de proveedor que están asociados al UUID de un usuario registrado.")
     @ApiResponse(responseCode = "200", description = "Lista de proveedores obtenida exitosamente")
     @PreAuthorize("hasRole('ADMIN') or (hasRole('PROVEEDOR') and #usuarioId.toString() == authentication.credentials)")
     @GetMapping("/usuario/{usuarioId}")
@@ -75,7 +75,7 @@ public class ProveedorController {
         return ResponseEntity.ok(response);
     }
     
-    @Operation(summary = "Obtiene el ID de proveedor a partir del ID de usuario (Uso interno para ms-productos)")
+    @Operation(summary = "Obtiene el ID de proveedor a partir del ID de usuario (Uso interno para ms-productos)", description = "Endpoint de uso interno diseñado para comunicar el microservicio de productos con el de proveedores y resolver el UUID correspondiente.")
     @ApiResponse(responseCode = "200", description = "ID del proveedor retornado exitosamente")
     @GetMapping("/interno/usuario/{usuarioId}/id")
     public ResponseEntity<UUID> obtenerIdProveedorInterno(@PathVariable UUID usuarioId) {
@@ -87,7 +87,7 @@ public class ProveedorController {
     // ENDPOINTS: DOCUMENTOS
     // ==========================================
 
-    @Operation(summary = "Agrega un nuevo documento al proveedor asociado al usuario autenticado")
+    @Operation(summary = "Agrega un nuevo documento al proveedor asociado al usuario autenticado", description = "Permite subir y asociar un tipo de documento legal o tributario al perfil del proveedor activo.")
     @ApiResponse(responseCode = "201", description = "Documento agregado exitosamente")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
         description = "Payload con los datos del documento",
@@ -113,7 +113,7 @@ public class ProveedorController {
     // ENDPOINTS: VISTA CONSOLIDADA
     // ==========================================
 
-    @Operation(summary = "Obtiene la información consolidada de un proveedor por su ID")
+    @Operation(summary = "Obtiene la información consolidada de un proveedor por su ID", description = "Devuelve los detalles completos del proveedor incluyendo la lista de todos sus documentos asociados y sus respectivos estados.")
     @ApiResponse(responseCode = "200", description = "Vista completa del proveedor obtenida exitosamente")
     @PreAuthorize("hasRole('PROVEEDOR') or hasRole('ADMIN')")
     @GetMapping("/{id}/completo")
@@ -121,18 +121,28 @@ public class ProveedorController {
         ProveedorCompletoResponse response = proveedorService.obtenerProveedorCompleto(id);
         return ResponseEntity.ok(response);
     }
-    @Operation(summary = "Actualiza el estado de un documento")
-@ApiResponse(responseCode = "200", description = "Estado del documento actualizado correctamente")
-@PreAuthorize("hasRole('ADMIN')")
-@PutMapping("/documentos/{documentoId}/estado")
-public ResponseEntity<DocumentoResponse> actualizarEstadoDocumento(
-        @PathVariable UUID documentoId,
-        @Valid @RequestBody ActualizarEstadoDocumentoRequest request) {
 
-    DocumentoResponse response = proveedorService.actualizarEstadoDocumento(
-            documentoId,
-            request.estado());
+    @Operation(summary = "Actualiza el estado de un documento", description = "Permite a un administrador cambiar el estado de verificación de un documento específico (ej. PENDIENTE, APROBADO, RECHAZADO).")
+    @ApiResponse(responseCode = "200", description = "Estado del documento actualizado correctamente")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Payload con el nuevo estado a asignar",
+        content = @Content(
+            examples = @ExampleObject(
+                name = "EjemploActualizacionEstado",
+                value = "{\n  \"estado\": \"APROBADO\"\n}"
+            )
+        )
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/documentos/{documentoId}/estado")
+    public ResponseEntity<DocumentoResponse> actualizarEstadoDocumento(
+            @PathVariable UUID documentoId,
+            @Valid @RequestBody ActualizarEstadoDocumentoRequest request) {
 
-    return ResponseEntity.ok(response);
-}
+        DocumentoResponse response = proveedorService.actualizarEstadoDocumento(
+                documentoId,
+                request.estado());
+
+        return ResponseEntity.ok(response);
+    }
 }
