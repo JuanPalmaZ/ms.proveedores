@@ -107,4 +107,16 @@ public class ProveedorService {
 
         return proveedorMapper.toProveedorCompletoResponse(proveedor, documentosResponse);
     }
+    @Transactional
+    public DocumentoResponse actualizarEstadoDocumento(UUID documentoId, String estado) {
+
+    Documento documento = documentoRepository.findById(documentoId)
+            .orElseThrow(() -> new RuntimeException("Documento no encontrado."));
+
+    documento.setEstado(EstadoDocumento.valueOf(estado.toUpperCase()));
+
+    Documento documentoActualizado = documentoRepository.save(documento);
+
+    return proveedorMapper.toDocumentoResponse(documentoActualizado);
+}
 }
