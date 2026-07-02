@@ -1,7 +1,5 @@
-package cl.paris.marketplace.ms_proveedores.model;
+package cl.paris.marketplace.ms.administracion.model;
 
 public enum EstadoDocumento {
-    PENDIENTE,
-    APROBADO,
-    RECHAZADO
+
 }
