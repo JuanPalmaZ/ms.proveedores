@@ -14,6 +14,7 @@ import cl.paris.marketplace.ms_proveedores.dto.ProveedorResponse;
 import cl.paris.marketplace.ms_proveedores.mapper.ProveedorMapper;
 import cl.paris.marketplace.ms_proveedores.model.Documento;
 import cl.paris.marketplace.ms_proveedores.model.Proveedor;
+import cl.paris.marketplace.ms_proveedores.model.enums.EstadoDocumento;
 import cl.paris.marketplace.ms_proveedores.repository.DocumentoRepository;
 import cl.paris.marketplace.ms_proveedores.repository.ProveedorRepository;
 
@@ -35,7 +36,7 @@ public class ProveedorService {
     // ==========================================
     // LÓGICA DE NEGOCIO: PROVEEDORES
     // ==========================================
-    
+
     @Transactional
     public ProveedorResponse crearProveedor(ProveedorRequest request, UUID usuarioId) {
         if (proveedorRepository.existsByRut(request.rut())) {
@@ -43,10 +44,10 @@ public class ProveedorService {
         }
 
         Proveedor proveedor = proveedorMapper.toProveedorEntity(request);
-        proveedor.setUsuarioId(usuarioId); 
-        
+        proveedor.setUsuarioId(usuarioId);
+
         Proveedor proveedorGuardado = proveedorRepository.save(proveedor);
-        
+
         return proveedorMapper.toProveedorResponse(proveedorGuardado);
     }
 
@@ -56,7 +57,7 @@ public class ProveedorService {
                 .map(proveedorMapper::toProveedorResponse)
                 .toList();
     }
-    
+
     // Puente interno para ms-productos
     @Transactional(readOnly = true)
     public UUID obtenerIdProveedorPorUsuarioId(UUID usuarioId) {
@@ -68,34 +69,38 @@ public class ProveedorService {
     // ==========================================
     // LÓGICA DE NEGOCIO: DOCUMENTOS
     // ==========================================
-    
+
     @Transactional
     public DocumentoResponse agregarDocumento(DocumentoRequest request, UUID usuarioId) {
-        // Buscamos al proveedor usando su token de usuario
+
         Proveedor proveedor = proveedorRepository.findFirstByUsuarioId(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Error: No tienes un perfil de proveedor asociado."));
 
         if (documentoRepository.existsByProveedorIdAndTipoDocumento(proveedor.getId(), request.tipoDocumento())) {
-            throw new RuntimeException("El proveedor ya cuenta con un documento de tipo: " + request.tipoDocumento());
+            throw new RuntimeException(
+                    "El proveedor ya cuenta con un documento de tipo: " + request.tipoDocumento());
         }
 
         Documento documento = proveedorMapper.toDocumentoEntity(request, proveedor);
+        documento.setEstado(EstadoDocumento.PENDIENTE);
+
         Documento documentoGuardado = documentoRepository.save(documento);
-        
+
         return proveedorMapper.toDocumentoResponse(documentoGuardado);
     }
 
     // ==========================================
     // LÓGICA DE NEGOCIO: VISTA CONSOLIDADA
     // ==========================================
-    
+
     @Transactional(readOnly = true)
     public ProveedorCompletoResponse obtenerProveedorCompleto(UUID proveedorId) {
+
         Proveedor proveedor = proveedorRepository.findById(proveedorId)
                 .orElseThrow(() -> new RuntimeException("Proveedor no encontrado."));
 
         List<Documento> documentosEntity = documentoRepository.findByProveedorId(proveedorId);
-        
+
         List<DocumentoResponse> documentosResponse = documentosEntity.stream()
                 .map(proveedorMapper::toDocumentoResponse)
                 .toList();
