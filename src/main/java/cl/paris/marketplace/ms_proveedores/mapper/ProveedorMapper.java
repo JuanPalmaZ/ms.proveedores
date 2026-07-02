@@ -25,7 +25,7 @@ public class ProveedorMapper {
         proveedor.setRazonSocial(request.razonSocial());
         proveedor.setRut(request.rut());
         // Regla de negocio: Todo proveedor nuevo entra en estado PENDIENTE
-        proveedor.setEstadoApro("PENDIENTE"); 
+        proveedor.setEstadoApro("PENDIENTE");
         return proveedor;
     }
 
@@ -45,10 +45,9 @@ public class ProveedorMapper {
 
     public Documento toDocumentoEntity(DocumentoRequest request, Proveedor proveedor) {
         Documento documento = new Documento();
-        documento.setProveedor(proveedor); // Amarra el documento a su dueño
+        documento.setProveedor(proveedor);
         documento.setTipoDocumento(request.tipoDocumento());
-        // Regla de negocio: Se registra la hora exacta del servidor
-        documento.setFechaSubida(LocalDateTime.now()); 
+        documento.setFechaSubida(LocalDateTime.now());
         return documento;
     }
 
@@ -56,7 +55,8 @@ public class ProveedorMapper {
         return new DocumentoResponse(
                 documento.getId(),
                 documento.getTipoDocumento(),
-                documento.getFechaSubida()
+                documento.getFechaSubida(),
+                documento.getEstado()
         );
     }
 
@@ -64,14 +64,16 @@ public class ProveedorMapper {
     // MAPPER PARA VISTA COMPLETA
     // ==========================================
 
-    public ProveedorCompletoResponse toProveedorCompletoResponse(Proveedor proveedor, List<DocumentoResponse> documentosResponse) {
+    public ProveedorCompletoResponse toProveedorCompletoResponse(Proveedor proveedor,
+            List<DocumentoResponse> documentosResponse) {
+
         return new ProveedorCompletoResponse(
                 proveedor.getId(),
                 proveedor.getUsuarioId(),
                 proveedor.getRazonSocial(),
                 proveedor.getRut(),
                 proveedor.getEstadoApro(),
-                documentosResponse 
+                documentosResponse
         );
     }
 }
