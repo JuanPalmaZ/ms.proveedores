@@ -14,9 +14,10 @@ import cl.paris.marketplace.ms_proveedores.dto.ProveedorResponse;
 import cl.paris.marketplace.ms_proveedores.mapper.ProveedorMapper;
 import cl.paris.marketplace.ms_proveedores.model.Documento;
 import cl.paris.marketplace.ms_proveedores.model.Proveedor;
-import cl.paris.marketplace.ms_proveedores.model.enums.EstadoDocumento;
+import cl.paris.marketplace.ms_proveedores.model.EstadoDocumento;
 import cl.paris.marketplace.ms_proveedores.repository.DocumentoRepository;
 import cl.paris.marketplace.ms_proveedores.repository.ProveedorRepository;
+import cl.paris.marketplace.ms_proveedores.dto.ActualizarEstadoDocumentoRequest;
 
 @Service
 public class ProveedorService {
