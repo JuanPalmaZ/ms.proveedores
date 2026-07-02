@@ -3,8 +3,11 @@ package cl.paris.marketplace.ms_proveedores.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import cl.paris.marketplace.ms_proveedores.model.enums.EstadoDocumento;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,19 +26,25 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "documento")
-
 public class Documento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "proveedor_id",nullable=false)
+    @JoinColumn(name = "proveedor_id", nullable = false)
     private Proveedor proveedor;
-    @Column(name = "tipo_documento", nullable = false, length = 50) // Ej: "CERTIFICADO_CALIDAD", "CONTRATO"
+
+    @Column(name = "tipo_documento", nullable = false, length = 50)
     private String tipoDocumento;
+
     @Column(name = "fecha_subida")
     private LocalDateTime fechaSubida;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
+    private EstadoDocumento estado = EstadoDocumento.PENDIENTE;
 
 }
